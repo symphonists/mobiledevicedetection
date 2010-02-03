@@ -28,8 +28,8 @@
     public function grab(&$param_pool)
     {
       $xml = new XMLElement('device');
-      $xml->setAttribute('mobile', ($this->is_mobile()) ? "true" : "false");
-      $xml->setAttribute('iphone', ($this->is_iphone()) ? "true" : "false");
+      $xml->setAttribute('mobile', ($this->is_mobile()) ? "true" : "");
+      $xml->setAttribute('iphone', ($this->is_iphone()) ? "true" : "");
       return ($xml);
     }
     
