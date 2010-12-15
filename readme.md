@@ -3,7 +3,7 @@
 Detects mobile clients, what device they are using and redirect mobile clients.
 
 __Version:__ 1.1  
-__Date:__ 14 December 2010  
+__Date:__ 15 December 2010  
 __Requirements:__ Symphony 2.1 and later  
 __Author:__ Rowan Lewis <me@rowanlewis.com>, originally Max Wheeler  
 __GitHub Repository:__ <http://github.com/rowan-lewis/mobiledevicedetection>  
@@ -22,13 +22,40 @@ __GitHub Repository:__ <http://github.com/rowan-lewis/mobiledevicedetection>
 
 This extension provides a "Mobile Device Detection" datasource for detecting mobile devices based on user-agent string. Its output takes the following form:
 
-	<device is-mobile="no" is-andoid="no" iphone="no" ... />
+	<device is-mobile="no" />
 
-If a mobile device is detected the mobile attribute will be set to "yes" along with any attributes designating the device type:
+If a mobile device is detected the mobile attribute will be set to "yes" and an element will be added the device being used to view the page:
 
-	<device is-mobile="yes" is-android="no" iphone="yes" ... />
+	<device is-mobile="yes">
+		<android version="2.3" />
+	</device>
 
-Additionally, you can set a URL to redirect mobile devices to, and which devices you would like to redirect from the System > Preferences page.
+It is theoretically possible for more than one device to appear in this list.
+
+
+## Redirects
+
+You can redirect mobile devices of your choice to a custom mobile site, this can disabled by a visitor by adding `?no-mobile-redirect` to the current page URL. This sets a cookie and prevents any further attempts to redirect the client.
+
+All configuration is managed from System > Preferences:
+
+	No Redirect Cookie
+	+-----------------------------------+
+	| no-mobile-redirect                |
+	+-----------------------------------+
+	
+	Redirect URL
+	+-----------------------------------+
+	| ...                               |
+	+-----------------------------------+
+	
+	Redirect Devices
+	+-----------------------------------+
+	| ...                               |
+	+-----------------------------------+
+	android blackberry ipad iphone palm
+
+If the URL is set, but no devices are selected, then any mobile visitor will be redirected.
 
 
 ## Delegates
@@ -47,11 +74,12 @@ This extension exposes the `MobileRedirection` delegate, which allows other exte
 
 ## Changelog
 
-*Version 1.1, 14 December 2010*
+*Version 1.1, 15 December 2010*
 
  - Re-wrote Max Wheelers original extension.
  - Added support for more devices, iPad and Android.
  - Added mobile device redirection support.
+ - Added support for disabling mobile redirection.
 
 
 *Version 1.0, 5 February 2010*

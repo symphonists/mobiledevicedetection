@@ -1,6 +1,13 @@
 <?php
 	
-	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledevicedetection.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledetector.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledetectorresults.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledevice.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.android.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.blackberry.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.ipad.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.iphone.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.palm.php';
 	
 	class Extension_MobileDeviceDetection extends Extension {
 	/*-------------------------------------------------------------------------
@@ -25,7 +32,7 @@
 				array(
 					'page'		=> '/frontend/',
 					'delegate'	=> 'FrontendInitialised',
-					'callback'	=> 'redirect'
+					'callback'	=> 'initialize'
 				),
 				array(
 					'page'		=> '/system/preferences/',
@@ -40,17 +47,40 @@
 	-------------------------------------------------------------------------*/
 		
 		const CONF = 'mobile-device-detection';
+		const CONF_COOKIE = 'not-mobile-cookie';
 		const CONF_URL = 'redirect-url';
 		const CONF_DEVICES = 'redirect-devices';
+		
+	/*-------------------------------------------------------------------------
+		Install:
+	-------------------------------------------------------------------------*/
+		
+		public function install() {
+			$conf = Symphony::Configuration();
+			$conf->set(self::CONF_COOKIE, 'no-mobile-redirect', self::CONF);
+			Administration::instance()->saveConfig();
+			
+			return true;
+		}
 		
 	/*-------------------------------------------------------------------------
 		Utilities:
 	-------------------------------------------------------------------------*/
 		
-		public function redirect($context) {
+		public function initialize($context) {
 			$conf = Symphony::Configuration();
-			$device = MobileDeviceDetection::detect(MobileDeviceDetection::DEVICE_ANDROID);
+			$result = MobileDetector::detect(DeviceIPhone::instance());
+			$cookie = $conf->get(self::CONF_COOKIE, self::CONF);
 			$url = $conf->get(self::CONF_URL, self::CONF);
+			$devices = $conf->get(self::CONF_DEVICES, self::CONF);
+			
+			if ($devices) {
+				$devices = explode(', ', $devices);
+			}
+			
+			else {
+				$devices = array();
+			}
 			
 			/**
 			* Allows other extensions to override when and where a mobile device is redirected.
@@ -58,20 +88,39 @@
 			* @delegate MobileRedirection
 			* @param string $context /frontend/
 			* @param string $url
-			* @param MobileDeviceDetection $device
+			* @param array $devices
+			* @param MobileDetectorResults $result
 			*/
 			Frontend::instance()->ExtensionManager->notifyMembers(
 				'MobileRedirection',
 				'/frontend/',
 				array(
 					'url'		=> &$url,
-					'device'	=> $device
+					'devices'	=> &$devices,
+					'result'	=> $result
 				)
 			);
 			
-			if (!$url || !$device->passed()) return;
+			// User is requesting mobile redirection be disabled:
+			if (isset($_GET['no-mobile-redirect']) || Frontend::instance()->Cookie->get($cookie) === true) {
+				Frontend::instance()->Cookie->set($cookie, true); return;
+			}
 			
-			redirect($url);
+			$can_redirect = $url && $result->passed();
+			
+			// Device was not detected, stop.
+			if ($devices) {
+				$can_redirect = false;
+				
+				foreach ($devices as $name) {
+					if (!isset($result->devices()->{$name})) continue;
+					if (!$result->devices()->{$name}->detected) continue;
+					
+					$can_redirect = true; break;
+				}
+			}
+			
+			if ($can_redirect) redirect($url);
 		}
 		
 		public function appendPreferences($context) {
@@ -80,6 +129,16 @@
 			$group = new XMLElement('fieldset');
 			$group->setAttribute('class', 'settings');
 			$group->appendChild(new XMLElement('legend', __('Mobile Device Detection')));
+			
+			// No Redirect Cookie:
+			$label = Widget::Label(__('No Redirect Cookie'));
+			$label->appendChild(Widget::Input(
+				'settings[' . self::CONF . '][' . self::CONF_COOKIE . ']',
+				General::Sanitize(
+					$conf->get(self::CONF_COOKIE, self::CONF)
+				)
+			));
+			$group->appendChild($label);
 			
 			// Redirect URL:
 			$label = Widget::Label(__('Redirect URL'));
@@ -104,7 +163,7 @@
 			$list = new XMLElement('ul');
 			$list->setAttribute('class', 'tags');
 			
-			foreach (array_keys(MobileDeviceDetection::$positives) as $type) {
+			foreach (MobileDetector::devices() as $type => $device) {
 				$item = new XMLElement('li', $type);
 				$list->appendChild($item);
 			}

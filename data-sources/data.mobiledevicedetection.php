@@ -27,17 +27,23 @@
 		}
 		
 		public function grab($param_pool) {
-			$data = MobileDeviceDetection::detect();
-			$xml = new XMLElement('device');
-			$xml->setAttribute('is-mobile', 'no');
+			$data = MobileDetector::detect();
+			$result = new XMLElement('device');
+			$result->setAttribute('is-mobile', 'no');
 			
-			if ($data->passed()) $xml->setAttribute('is-mobile', 'yes');
+			if ($data->passed()) $result->setAttribute('is-mobile', 'yes');
 			
-			foreach ($data->devices() as $type => $value) {
-				$xml->setAttribute('is-' . Lang::createHandle($type), $value ? 'yes' : 'no');
+			foreach ($data->devices() as $type => $values) {
+				if (!$values->detected) continue;
+				
+				$item = new XMLElement($type);
+				
+				if ($values->version) $item->setAttribute('version', $values->version);
+				
+				$result->appendChild($item);
 			}
 			
-			return $xml;
+			return $result;
 		}
 	}
 	
