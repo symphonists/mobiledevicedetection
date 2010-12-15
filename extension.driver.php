@@ -69,7 +69,7 @@
 		
 		public function initialize($context) {
 			$conf = Symphony::Configuration();
-			$result = MobileDetector::detect(DeviceIPhone::instance());
+			$result = MobileDetector::detect();
 			$cookie = $conf->get(self::CONF_COOKIE, self::CONF);
 			$url = $conf->get(self::CONF_URL, self::CONF);
 			$devices = $conf->get(self::CONF_DEVICES, self::CONF);
