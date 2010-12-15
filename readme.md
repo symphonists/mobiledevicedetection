@@ -67,7 +67,8 @@ This extension exposes the `MobileRedirection` delegate, which allows other exte
 		'/frontend/',
 		array(
 			'url'		=> &$url,
-			'device'	=> $device
+			'devices'	=> &$devices,
+			'result'	=> $result
 		)
 	)
 
