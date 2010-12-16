@@ -48,7 +48,7 @@
 		* @param	$device			MobileDevice
 		*/
 		static public function registerDevice(MobileDevice $device) {
-			self::$devices[$device->about()->{'handle'}] = $device;
+			self::$devices[$device->{'handle'}] = $device;
 		}
 		
 		/**
@@ -67,71 +67,44 @@
 		* @return	MobileDeviceDetection
 		*/
 		static public function detect(MobileDevice $device = null) {
-			$data = new MobileDetectorResults();
-			$source = $_SERVER;
+			$result = new MobileDetectorResults();
+			$data = $_SERVER;
 			
 			// Simulate a particular device?
-			if ($device) $source = $device->simulate($source);
+			if ($device) $data = $device->simulate($data);
 			
 			// Something to do with detecting WAP support:
-			if (isset($source['HTTP_X_WAP_PROFILE']) || preg_match('%wap\.|\.wap%i', $source['HTTP_ACCEPT'])) {
-				$data->pass();
+			if (isset($data['HTTP_X_WAP_PROFILE']) || preg_match('%wap\.|\.wap%i', $data['HTTP_ACCEPT'])) {
+				$result->pass();
 			}
 			
 			// Make sure no negative matches apply, not a mobile:
 			foreach (self::$negatives as $match) {
-				if (!preg_match($match, $source['HTTP_USER_AGENT'])) continue;
+				if (!preg_match($match, $data['HTTP_USER_AGENT'])) continue;
 				
-				$data->fail();
+				$result->fail();
 				
-				return $data;
+				return $result;
 			}
 			
 			// Check for generic mobile device, not a mobile:
 			foreach (self::$positives as $match) {
-				if (!preg_match($match, $source['HTTP_USER_AGENT'])) continue;
+				if (!preg_match($match, $data['HTTP_USER_AGENT'])) continue;
 				
-				$data->pass();
+				$result->pass();
 				
 				break;
 			}
 			
 			// Check for matches, is a mobile:
-			foreach (self::$devices as $type => $device) {
-				foreach ($device->matches()->negative as $match) {
-					if (!preg_match($match, $source['HTTP_USER_AGENT'])) continue;
-					
-					$data->fail();
-					
-					continue 2;
-				}
-				
-				foreach ($device->matches()->positive as $match) {
-					if (!preg_match($match, $source['HTTP_USER_AGENT'])) continue;
-					
-					// Device matched:
-					$data->pass();
-					$data->devices()->{$type}->detected = true;
-					
-					// Find device version:
-					if (isset($device->version()->capture) && isset($device->version()->expression)) {
-						if (preg_match($device->version()->expression, $source['HTTP_USER_AGENT'], $matches)) {
-							$data->devices()->{$type}->version = preg_replace(
-								$device->version()->expression,
-								$device->version()->capture,
-								$matches[0]
-							);
-						}
-					}
-					
-					break;
-				}
+			foreach (self::$devices as $device) {
+				$device->detect($data, $result);
 			}
 			
 			// No decision yet, not a mobile:
-			if (!$data->done()) $data->fail();
+			if (!$result->done()) $result->fail();
 			
-			return $data;
+			return $result;
 		}
 	}
 	

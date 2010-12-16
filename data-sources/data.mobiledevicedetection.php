@@ -38,7 +38,9 @@
 				
 				$item = new XMLElement($type);
 				
-				if ($values->version) $item->setAttribute('version', $values->version);
+				foreach ($values->captures as $name => $value) {
+					$item->setAttribute($name, $value);
+				}
 				
 				$result->appendChild($item);
 			}
