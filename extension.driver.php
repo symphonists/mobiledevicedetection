@@ -102,7 +102,7 @@
 			);
 			
 			// User is requesting mobile redirection be enabled:
-			if (isset($_GET['is-mobile']) || isset($_SESSION[$cookie])) {
+			if (isset($_GET['is-mobile']) && isset($_SESSION[$cookie])) {
 				unset($_SESSION[$cookie]);
 			}
 			
