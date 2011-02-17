@@ -101,8 +101,10 @@
 				)
 			);
 			
-			// Uncomment to reset disabled state:
-			//unset($_SESSION[$cookie]);
+			// User is requesting mobile redirection be enabled:
+			if (isset($_GET['is-mobile']) || isset($_SESSION[$cookie])) {
+				unset($_SESSION[$cookie]);
+			}
 			
 			// User is requesting mobile redirection be disabled:
 			if (isset($_GET['not-mobile']) || isset($_SESSION[$cookie])) {
