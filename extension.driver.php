@@ -102,7 +102,11 @@
 			);
 			
 			// User is requesting mobile redirection be disabled:
-			if (isset($_GET['no-mobile-redirect']) || Frontend::instance()->Cookie->get($cookie) === true) {
+			if (isset($_GET['not-mobile']) || Frontend::instance()->Cookie->get($cookie) === true) {
+				// Not a mobile, this request only:
+				if ($_GET['not-mobile'] == 'once') return;
+				
+				// Not a mobile permenantly:
 				Frontend::instance()->Cookie->set($cookie, true); return;
 			}
 			

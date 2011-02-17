@@ -35,7 +35,7 @@ It is theoretically possible for more than one device to appear in this list.
 
 ## Redirects
 
-You can redirect mobile devices of your choice to a custom mobile site, this can disabled by a visitor by adding `?no-mobile-redirect` to the current page URL. This sets a cookie and prevents any further attempts to redirect the client.
+You can redirect mobile devices of your choice to a custom mobile site, this can disabled by a visitor by adding `?not-mobile` to the current page URL. This sets a cookie and prevents any further attempts to redirect the client.
 
 All configuration is managed from System > Preferences:
 
