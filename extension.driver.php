@@ -101,13 +101,16 @@
 				)
 			);
 			
+			// Uncomment to reset disabled state:
+			//unset($_SESSION[$cookie]);
+			
 			// User is requesting mobile redirection be disabled:
-			if (isset($_GET['not-mobile']) || Frontend::instance()->Cookie->get($cookie) === true) {
+			if (isset($_GET['not-mobile']) || isset($_SESSION[$cookie])) {
 				// Not a mobile, this request only:
 				if ($_GET['not-mobile'] == 'once') return;
 				
 				// Not a mobile permenantly:
-				Frontend::instance()->Cookie->set($cookie, true); return;
+				$_SESSION[$cookie] = 'yes'; return;
 			}
 			
 			$can_redirect = $url && $result->passed();

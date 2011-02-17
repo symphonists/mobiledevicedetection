@@ -4,12 +4,10 @@
 		static protected $instance;
 		
 		public function initialize() {
-			$this->about()->name = 'Palm';
-			$this->about()->handle = 'palm';
-			$this->about()->user_agent = '';
+			$this->{'name'} = 'Palm';
 			
 			// Positive matching:
-			$this->matches()->positive = array(
+			$this->allow(
 				'%palmsource%i',	'%palmos%i',		'%webos%i'
 			);
 		}

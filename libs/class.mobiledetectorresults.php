@@ -10,7 +10,7 @@
 			foreach (MobileDetector::devices() as $type => $device) {
 				$this->devices->{$type} = (object)array(
 					'detected'	=> false,
-					'version'	=> null
+					'captures'	=> (object)array()
 				);
 			}
 		}
