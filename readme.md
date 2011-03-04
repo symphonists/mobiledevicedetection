@@ -77,7 +77,7 @@ This extension exposes the `MobileRedirection` delegate, which allows other exte
 
 *Version 1.1, 15 December 2010*
 
- - Re-wrote Max Wheelers original extension.
+ - Re-wrote Max Wheeler's original extension.
  - Added support for more devices, iPad and Android.
  - Added mobile device redirection support.
  - Added support for disabling mobile redirection.
