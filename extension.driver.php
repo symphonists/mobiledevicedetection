@@ -17,8 +17,8 @@
 		public function about() {
 			return array(
 				'name'			=> 'Mobile Device Detection',
-				'version'		=> '1.1',
-				'release-date'	=> '2010-12-14',
+				'version'		=> '1.2',
+				'release-date'	=> '2011-08-29',
 				'author'		=> array(
 					'name'			=> 'Rowan Lewis',
 					'website'		=> 'http://rowanlewis.com',
