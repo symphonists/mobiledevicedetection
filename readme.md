@@ -2,8 +2,8 @@
 
 Detects mobile clients, what device they are using and redirect mobile clients.
 
-__Version:__ 1.1  
-__Date:__ 15 December 2010  
+__Version:__ 1.2  
+__Date:__ 29 august 2011  
 __Requirements:__ Symphony 2.1 and later  
 __Author:__ Rowan Lewis <me@rowanlewis.com>, originally Max Wheeler  
 __GitHub Repository:__ <http://github.com/rowan-lewis/mobiledevicedetection>  
@@ -74,6 +74,10 @@ This extension exposes the `MobileRedirection` delegate, which allows other exte
 
 
 ## Changelog
+
+*Version 1.2, 29 August 2011*
+
+ - PHP 5.2 compatibility from Rowan
 
 *Version 1.1, 15 December 2010*
 
