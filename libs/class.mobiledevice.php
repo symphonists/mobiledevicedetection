@@ -2,15 +2,14 @@
 
 	class MobileDevice {
 		static public function instance($class) {
-			if (!isset($class::$instance)) {
-				$class::$instance = new $class();
-				$class::$instance->initialize();
-
-				MobileDetector::registerDevice($class::$instance);
-			}
-
-			return $class::$instance;
-		}
+		            if (!isset($class->$instance)) {
+		                $instance = new $class();
+		                $instance->initialize();
+		                MobileDetector::registerDevice($instance);
+		            }
+		
+		            return $instance;
+		        }
 
 		protected $about;
 		protected $allows;
@@ -54,12 +53,14 @@
 		}
 
 		public function allow() {
-			$this->allows = array_merge($this->allows, func_get_args());
-		}
+		            $func_args=func_get_args();
+		            $this->allows = array_merge($this->allows, $func_args);
+		        }
 
 		public function deny() {
-			$this->denies = array_merge($this->denies, func_get_args());
-		}
+		        $func_args=func_get_args();
+		        $this->denies = array_merge($this->denies, $func_args);
+		    }
 
 		public function capture($name, $expression, $replacement) {
 			$this->captures[] = (object)array(
