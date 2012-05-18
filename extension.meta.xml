@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="mobiledevicedetection" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+	<name>Mobile Device Detection</name>
+	<description>Detects mobile clients, what device they are using and redirect mobile clients</description>
+	<repo type="github">https://github.com/symphonists/mobiledevicedetection</repo>
+	<url type="discuss">http://symphony-cms.com/discuss/thread/38410/</url>
+	<types>
+		<type>Other</type>
+	</types>
+	<authors>
+		<author>
+			<name github="symphonists" symphony="community">Symphony Community</name>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.2" date="2011-08-29" min="2.0" max="2.2.x" />
+	</releases>
+</extension>
