@@ -11,7 +11,8 @@
 
 			// Positive matching:
 			$this->allow(
-				'%blackberry%i'
+				'%blackberry%i',
+				'%bb%i'
 			);
 
 			// Version matching:
