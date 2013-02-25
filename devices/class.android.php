@@ -15,7 +15,7 @@
 			// Version matching:
 			$this->capture(
 				'software-version',
-				'%Android ([0-9]\.[0-9]);%',
+				'%Android ([0-9\.]*);%',
 				'\1'
 			);
 		}
