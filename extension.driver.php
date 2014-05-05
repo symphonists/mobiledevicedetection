@@ -129,7 +129,26 @@
 				}
 			}
 
-			if ($can_redirect) redirect($url);
+			if ($can_redirect) {
+				$current = $this->sanitizeUrl(getCurrentPage());
+				$redirect = $this->sanitizeUrl($url);
+
+				if (
+					$redirect !== $current
+					&& strpos($redirect, $current) !== 0
+				) {
+					redirect($redirect);
+				}
+			}
+		}
+
+		public function sanitizeUrl($url) {
+			// If it starts with a slash prepend URL:
+			if (strpos($url, '/') === 0) {
+				$url = URL . $url;
+			}
+
+			return $url;
 		}
 
 		public function appendPreferences($context) {
