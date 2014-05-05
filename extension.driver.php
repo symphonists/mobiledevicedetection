@@ -5,9 +5,9 @@
 	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledevice.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.android.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.blackberry.php';
-	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.ipad.php';
-	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.iphone.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.palm.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.ios.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.webos.php';
 
 	class Extension_MobileDeviceDetection extends Extension {
 	/*-------------------------------------------------------------------------

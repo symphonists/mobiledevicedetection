@@ -14,12 +14,14 @@
 		protected $allows;
 		protected $captures;
 		protected $denies;
+		protected $rules;
 
 		public function __construct() {
 			$this->about = array();
 			$this->allows = array();
 			$this->captures = array();
 			$this->denies = array();
+			$this->rules = array();
 
 			$this->matches = (object)array(
 				'negative'	=> array(),
@@ -61,11 +63,21 @@
 			$this->denies = array_merge($this->denies, $func_args);
 		}
 
-		public function capture($name, $expression, $replacement) {
+		public function setIf($name, $expression, $replacement) {
 			$this->captures[] = (object)array(
-				'name'			=> $name,
-				'expression'	=> $expression,
-				'replacement'	=> $replacement
+				'name' =>			$name,
+				'type' =>			'if',
+				'expression' =>		$expression,
+				'replacement' =>	$replacement
+			);
+		}
+
+		public function setIfNot($name, $expression, $replacement) {
+			$this->captures[] = (object)array(
+				'name' =>			$name,
+				'type' =>			'if-not',
+				'expression' =>		$expression,
+				'replacement' =>	$replacement
 			);
 		}
 
@@ -87,21 +99,23 @@
 				$result->devices()->{$type}->detected = true;
 
 				foreach ($this->captures as $capture) {
-					if (!preg_match($capture->expression, $data['HTTP_USER_AGENT'], $matches)) continue;
+					$test = (boolean)preg_match($capture->expression, $data['HTTP_USER_AGENT'], $matches);
 
-					if ($capture->replacement instanceof Closure) {
-						$value = preg_replace_callback(
-							$capture->expression, $capture->replacement, $matches[0]
+					if ($capture->type === 'if') {
+						if (!$test) continue;
+
+						$result->devices()->{$type}->captures->{$capture->name} = preg_replace(
+							$capture->expression,
+							$capture->replacement,
+							$matches[0]
 						);
 					}
 
-					else {
-						$value = preg_replace(
-							$capture->expression, $capture->replacement, $matches[0]
-						);
-					}
+					else if ($capture->type === 'if-not') {
+						if ($test) continue;
 
-					$result->devices()->{$type}->captures->{$capture->name} = $value;
+						$result->devices()->{$type}->captures->{$capture->name} = $capture->replacement;
+					}
 				}
 
 				return true;
@@ -118,5 +132,3 @@
 			return $data;
 		}
 	}
-
-?>
