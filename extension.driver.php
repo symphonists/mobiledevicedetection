@@ -5,9 +5,9 @@
 	require_once EXTENSIONS . '/mobiledevicedetection/libs/class.mobiledevice.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.android.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.blackberry.php';
-	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.ipad.php';
-	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.iphone.php';
 	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.palm.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.ios.php';
+	require_once EXTENSIONS . '/mobiledevicedetection/devices/class.webos.php';
 
 	class Extension_MobileDeviceDetection extends Extension {
 	/*-------------------------------------------------------------------------
@@ -128,7 +128,26 @@
 				}
 			}
 
-			if ($can_redirect) redirect($url);
+			if ($can_redirect) {
+				$current = $this->sanitizeUrl(getCurrentPage());
+				$redirect = $this->sanitizeUrl($url);
+
+				if (
+					$redirect !== $current
+					&& strpos($redirect, $current) !== 0
+				) {
+					redirect($redirect);
+				}
+			}
+		}
+
+		public function sanitizeUrl($url) {
+			// If it starts with a slash prepend URL:
+			if (strpos($url, '/') === 0) {
+				$url = URL . $url;
+			}
+
+			return $url;
 		}
 
 		public function appendPreferences($context) {

@@ -8,11 +8,16 @@
 
 			// Positive matching:
 			$this->allow(
-				'%palmsource%i',	'%palmos%i',		'%webos%i'
+				'%palmsource%i',
+				'%palmos%i'
+			);
+
+			$this->setIfNot(
+				'hardware-type',
+				'%.%',
+				'mobile'
 			);
 		}
 	}
 
 	MobileDevice::instance('DevicePalm');
-
-?>
