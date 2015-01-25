@@ -26,7 +26,7 @@
 			return false;
 		}
 		
-		public function grab($param_pool) {
+		public function execute($param_pool) {
 			$data = MobileDetector::detect();
 			$result = new XMLElement('device');
 			$result->setAttribute('is-mobile', 'no');
