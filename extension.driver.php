@@ -146,6 +146,8 @@
 			if (strpos($url, '/') === 0) {
 				$url = URL . $url;
 			}
+			// Remove last "/", just in case it is missing in the redirect url input
+			$url = rtrim($url, "/");
 
 			return $url;
 		}
@@ -193,6 +195,7 @@
 			foreach (MobileDetector::devices() as $type => $device) {
 				$item = new XMLElement('li', $type);
 				$list->appendChild($item);
+				$list->setAttribute('data-interactive', 'data-interactive');
 			}
 
 			$group->appendChild($list);
