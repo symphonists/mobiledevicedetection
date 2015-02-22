@@ -134,7 +134,7 @@
 
 				if (
 					$redirect !== $current
-					&& strpos($redirect, $current) !== 0
+					&& strpos($current, $redirect) !== 0
 				) {
 					redirect($redirect);
 				}
