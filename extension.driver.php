@@ -134,7 +134,7 @@
 
 				if (
 					$redirect !== $current
-					&& strpos($redirect, $current) !== 0
+					&& strpos($current, $redirect) !== 0
 				) {
 					redirect($redirect);
 				}
@@ -193,6 +193,7 @@
 			foreach (MobileDetector::devices() as $type => $device) {
 				$item = new XMLElement('li', $type);
 				$list->appendChild($item);
+				$list->setAttribute('data-interactive', 'data-interactive');
 			}
 
 			$group->appendChild($list);
