@@ -2,7 +2,7 @@
 
 	class MobileDevice {
 		static public function instance($class) {
-			if (!isset($class->$instance)) {
+			if (!isset($class->instance)) {
 				$instance = new $class();
 				$instance->initialize();
 				MobileDetector::registerDevice($instance);
